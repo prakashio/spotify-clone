@@ -1,0 +1,70 @@
+import { FC, useState } from "react";
+import { Box, Flex, Input, Button } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import NextImage from "next/image";
+import { useSWRConfig } from "swr";
+import NuxtLink from "next/link";
+
+import { auth } from "../lib/mutations";
+
+const AuthForm: FC<{ mode: "signin" | "signup" }> = ({ mode }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    await auth(mode, { email, password });
+    setIsLoading(false);
+    router.push("/");
+  };
+
+  return (
+    <Box height="100vh" width="100vw" bg="black" color="white">
+      <Flex justify="center" align="center" height="100px">
+        <NextImage src="/logo.svg" height={60} width={150} />
+      </Flex>
+      <Flex justify="center" align="center" height="calc(100vh - 100px)">
+        <Box padding="50px" bg="gray.900">
+          <form onSubmit={handleSubmit}>
+            <Flex gap={2} direction="column">
+              <Input
+                borderRadius={0}
+                placeholder="email"
+                type="email"
+                onChange={({ target }) => setEmail(target.value)}
+              />
+              <Input
+                borderRadius={0}
+                placeholder="password"
+                type="password"
+                onChange={({ target }) => setPassword(target.value)}
+              />
+              <Button
+                marginTop="20px"
+                textTransform="uppercase"
+                borderRadius={0}
+                type="submit"
+                bg="green.500"
+                isLoading={isLoading}
+                sx={{
+                  "&:hover": {
+                    bg: "green.300",
+                  },
+                }}
+              >
+                {mode}
+              </Button>
+            </Flex>
+          </form>
+        </Box>
+      </Flex>
+    </Box>
+  );
+};
+
+export default AuthForm;
