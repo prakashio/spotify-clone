@@ -2,8 +2,17 @@ import { Box } from "@chakra-ui/layout";
 import { IconButton, Table, Thead, Tr, Th, Td, Tbody } from "@chakra-ui/react";
 import { FiPlay, FiClock } from "react-icons/fi";
 import { formatDate, formatTime } from "../lib/formatters";
+import { useStoreActions } from "easy-peasy";
 
 const SongsTable = ({ songs }) => {
+  const playSongs = useStoreActions((state: any) => state.changeActiveSongs);
+  const setActiveSong = useStoreActions((state: any) => state.changeActiveSong);
+
+  const handlePlay = (activeSong?) => {
+    setActiveSong(activeSong || songs[0]);
+    playSongs(songs);
+  };
+
   return (
     <Box bg="transparent" paddingX="40px" color="white">
       <Box padding="10px" marginBottom="20px">
@@ -11,12 +20,13 @@ const SongsTable = ({ songs }) => {
           icon={<FiPlay fontSize="30px" />}
           colorScheme="green"
           size="lg"
+          onClick={() => handlePlay()}
           aria-label="play"
           isRound
         />
       </Box>
       <Table variant="unstyled">
-        <Thead borderBottom="1px solid" borderColor="rgb(255,255,255,0.2">
+        <Thead borderBottom="1px solid" borderColor="rgb(255,255,255, 0.2)">
           <Tr>
             <Th>#</Th>
             <Th>Title</Th>
@@ -37,6 +47,7 @@ const SongsTable = ({ songs }) => {
               }}
               key={song.id}
               cursor="pointer"
+              onClick={() => handlePlay(song)}
             >
               <Td>{index + 1}</Td>
               <Td>{song.name}</Td>
