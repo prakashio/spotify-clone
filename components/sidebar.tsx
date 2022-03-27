@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/layout";
 import { FiHome, FiSearch, FiMusic, FiPlus, FiHeart } from "react-icons/fi";
 import NextLink from "next/link";
+import { usePlaylist } from "../lib/hooks";
 
 const navMenus = [
   {
@@ -43,9 +44,9 @@ const musicMenu = [
   },
 ];
 
-const playlists = new Array(30).fill(1).map((index) => `Playlist ${index}`);
-
 const Sidebar = () => {
+  const { playlists } = usePlaylist();
+
   return (
     <Box
       width="100%"
@@ -104,10 +105,16 @@ const Sidebar = () => {
         <Box height="55%" overflowY="auto" paddingY="20px">
           <List spacing={2}>
             {playlists.map((playlist) => (
-              <ListItem key={playlist} paddingX="20px" fontSize="16px">
+              <ListItem key={playlist.id} paddingX="20px" fontSize="16px">
                 <LinkBox>
-                  <NextLink href="/" passHref>
-                    <LinkOverlay>{playlist}</LinkOverlay>
+                  <NextLink
+                    href={{
+                      pathname: "/playlist/[id]",
+                      query: { id: playlist.id },
+                    }}
+                    passHref
+                  >
+                    <LinkOverlay>{playlist.name}</LinkOverlay>
                   </NextLink>
                 </LinkBox>
               </ListItem>
