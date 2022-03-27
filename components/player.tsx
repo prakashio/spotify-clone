@@ -194,7 +194,7 @@ const Player = ({ songs, activeSong }) => {
             <RangeSlider
               aria-label={["min", "max"]}
               step={0.1}
-              max={duration ? duration.toFixed(2) : 0}
+              max={duration ? (duration.toFixed(2) as unknown as number) : 0}
               onChange={onSeek}
               value={[seek]}
               onChangeStart={() => setIsSeeking(true)}
